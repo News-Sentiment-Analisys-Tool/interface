@@ -3,7 +3,6 @@ import './App.css'
 
 import React from 'react'
 import Chart from './Chart'
-import { getData } from "./utils"
 import { DailyReturn } from './DailyReturn'
 import { TypeChooser } from "react-stockcharts/lib/helper";
 import { CompanyDateForm } from './CompanyDateForm'
@@ -50,12 +49,6 @@ const getSentimentInformation = async (params) => {
     params
   });
 
-  // {
-  //   companyId: 1,
-  //   startDate: '2022-02-14T15:00:17.000Z',
-  //   endDate: '2022-03-07T02:55:31.000Z'
-  //   }
-
   return getSentimentData(groupBy(response.data, 'created_at'))
 };
 
@@ -81,16 +74,6 @@ function App() {
 }
 
 function ChartComponent({ params }) {
-	// componentDidMount() {
-	// 	getData().then(data => {
-	// 		//this.setState({ data: data.filter((x, y) => y > 1000 && y < 1100) })
-	// 	})
-  //   console.log('props', this.props.params)
-    
-
-  //   getStockData()
-	// }
-
   const [state, setState] = useState(null)
 
   useEffect(() => {
@@ -101,11 +84,11 @@ function ChartComponent({ params }) {
   }, [params])
 
   if (state === null) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
   }
 
   if (state.length === 0) {
-    return <div>No data for the period</div>
+    return <div>Sem dados para o período</div>
   }
 
   return (

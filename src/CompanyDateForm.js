@@ -2,12 +2,23 @@ import Form from "react-bootstrap/Form";
 import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useState } from 'react'
 
+const getCurrentFormatedDate = () => {
+    let startDate = new Date()
+    startDate.setMonth(startDate.getMonth() - 1)
+    let endDate = new Date()
+    endDate.setMonth(endDate.getMonth())
+
+    return {
+        startDate: startDate.toISOString().substring(0, 10),
+        endDate: endDate.toISOString().substring(0, 10)
+    }
+} 
+
 export const CompanyDateForm = ({ setValue }) => {
     const [company, setCompany] = useState(1)
-    const [startDate, setStartDate] = useState(null)
-    const [endDate, setEndDate] = useState(null)
+    const [startDate, setStartDate] = useState(getCurrentFormatedDate()['startDate'])
+    const [endDate, setEndDate] = useState(getCurrentFormatedDate()['endDate'])
 
-    
     const handleClick = () => {
         setValue({
             company,

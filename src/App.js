@@ -6,7 +6,14 @@ import Chart from './Chart'
 import { DailyReturn } from './DailyReturn'
 import { TypeChooser } from "react-stockcharts/lib/helper";
 import { CompanyDateForm } from './CompanyDateForm'
+import { AlertDismissible } from './AlertDismissible'
 import { useState, useEffect } from 'react'
+import {
+  Spinner,
+  Container,
+  Row,
+  Col
+} from 'react-bootstrap'
 
 const groupBy = (items, key) => items.reduce(
   (result, item) => ({
@@ -56,20 +63,22 @@ function App() {
   const [params, setParams] = useState(null)
 
   return (
-    <div>
-      <div className="App">
+    <Container>
+      <Row className='App'>
         <h1>MACD - Sentimento de Notícias</h1>
         <h3 style={{
           color: '#D3D3D3'
         }} >Moving Average Convergence Divergence (MACD) indicator</h3>
         <CompanyDateForm setValue={(data) => setParams(data)} />
-      </div>
-        {params && <ChartComponent params={{
-          companyId: params.company,
-          startDate: params.startDate,
-          endDate: params.endDate
-        }} />}
-    </div>
+      </Row>
+        {params 
+            && <ChartComponent params={{
+              companyId: params.company,
+              startDate: params.startDate,
+              endDate: params.endDate
+          }} />
+        }
+    </Container>
   );
 }
 
@@ -84,21 +93,35 @@ function ChartComponent({ params }) {
   }, [params])
 
   if (state === null) {
-    return <div>Carregando...</div>
+    return (
+      <Container>
+        <Row>
+          <Col></Col>
+          <Spinner style={{
+            width: 100,
+            height: 100,
+            margin: 100
+          }} 
+            variant="success"
+            animation="border"
+          />
+          <Col></Col>
+        </Row>
+      </Container>
+    )
   }
 
   if (state.length === 0) {
-    return <div>Sem dados para o período</div>
+    return (
+      <AlertDismissible />
+    )
   }
 
   return (
-    <div>
-      <TypeChooser>
-          {type => <Chart type={type} data={state} />}
-        </TypeChooser>
-    </div>
+    <TypeChooser>
+      {type => <Chart type={type} data={state} />}
+    </TypeChooser>
   )
-
 }
 
 export default App;

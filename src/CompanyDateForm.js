@@ -27,7 +27,6 @@ export const CompanyDateForm = ({ setValue }) => {
                             <Form.Control  
                                 type="date"
                                 name="startDate"
-                                placeholder="data de início"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)} />
                         </Col>
@@ -36,7 +35,6 @@ export const CompanyDateForm = ({ setValue }) => {
                             <Form.Control  
                                 type="date"
                                 name="endDate"
-                                placeholder="data de término"
                                 value={endDate}
                                 onChange={(e) => setEndDate(e.target.value)} />
                         </Col>

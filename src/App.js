@@ -65,10 +65,10 @@ function App() {
   return (
     <div>
       <div className="App">
-        <h1>MACD - News Sentiment Score</h1>
+        <h1>MACD - Sentimento de Notícias</h1>
         <h3 style={{
           color: '#D3D3D3'
-        }} >Moving Average Convergence Divergence (MACD) indicator</h3>
+        }} >Indicador de divergência de convergência média móvel (MACD)</h3>
         <CompanyDateForm setValue={(data) => setParams(data)} />
       </div>
         {params && <ChartComponent params={{
@@ -102,6 +102,10 @@ function ChartComponent({ params }) {
 
   if (state === null) {
     return <div>Loading...</div>
+  }
+
+  if (state.length === 0) {
+    return <div>No data for the period</div>
   }
 
   return (

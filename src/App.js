@@ -68,7 +68,7 @@ function App() {
         <h1>MACD - Sentimento de Notícias</h1>
         <h3 style={{
           color: '#D3D3D3'
-        }} >Indicador de divergência de convergência média móvel (MACD)</h3>
+        }} >Moving Average Convergence Divergence (MACD) indicator</h3>
         <CompanyDateForm setValue={(data) => setParams(data)} />
       </div>
         {params && <ChartComponent params={{

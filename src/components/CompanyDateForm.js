@@ -3,10 +3,8 @@ import { Button, Container, Row, Col } from 'react-bootstrap'
 import { useState } from 'react'
 
 const getCurrentFormatedDate = () => {
-    let startDate = new Date()
-    startDate.setMonth(startDate.getMonth() - 1)
+    let startDate = new Date('2022-02-17')
     let endDate = new Date()
-    endDate.setMonth(endDate.getMonth())
 
     return {
         startDate: startDate.toISOString().substring(0, 10),

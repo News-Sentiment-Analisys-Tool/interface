@@ -59,20 +59,20 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 
 		const ema26 = ema()
 			.id(0)
-			.options({ windowSize: 5, sourcePath: 'sentiment_score' })
+			.options({ windowSize: 12, sourcePath: 'sentiment_score' })
 			.merge((d, c) => { d.ema26 = c; })
 			.accessor(d => d.ema26);
 
 		const ema12 = ema()
 			.id(1)
-			.options({ windowSize: 4, sourcePath: 'sentiment_score' })
+			.options({ windowSize: 6, sourcePath: 'sentiment_score' })
 			.merge((d, c) => {d.ema12 = c;})
 			.accessor(d => d.ema12);
 
 		const macdCalculator = macd()
 			.options({
-				fast: 4,
-				slow: 5,
+				fast: 6,
+				slow: 12,
 				signal: 3,
 				sourcePath: 'sentiment_score'
 			})
@@ -113,7 +113,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 			>
 				<Chart id={1} height={400}
 					yExtents={[d => [d.high, d.low], ema26.accessor(), ema12.accessor()]}
-					padding={{ top: 10, bottom: 20 }}
+					padding={{ top: 50, bottom: 20 }}
 				>
 					<XAxis axisAt="bottom" orient="bottom" showTicks={false} outerTickSize={0} />
 					<YAxis axisAt="right" orient="right" ticks={5} />

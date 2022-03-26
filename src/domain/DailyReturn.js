@@ -16,7 +16,7 @@ export class DailyReturn {
         date
     ) {
         const dt = new Date(date)
-        dt.setHours(dt.getHours() + 3)
+        dt.setDate(dt.getDate() + 1)
         this.date =  dt
     }
 

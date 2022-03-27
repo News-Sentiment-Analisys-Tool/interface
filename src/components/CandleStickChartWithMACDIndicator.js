@@ -55,25 +55,25 @@ const mouseEdgeAppearance = {
 class CandleStickChartWithMACDIndicator extends React.Component {
 
 	render() {
-		const { type, data: initialData, width, ratio } = this.props;
+		const { type, data: initialData, width, ratio, getStockCalculus } = this.props;
 
 		const ema26 = ema()
 			.id(0)
-			.options({ windowSize: 12, sourcePath: 'sentiment_score' })
+			.options({ windowSize: 20, sourcePath: 'sentiment_score' })
 			.merge((d, c) => { d.ema26 = c; })
 			.accessor(d => d.ema26);
 
 		const ema12 = ema()
 			.id(1)
-			.options({ windowSize: 6, sourcePath: 'sentiment_score' })
+			.options({ windowSize: 8, sourcePath: 'sentiment_score' })
 			.merge((d, c) => {d.ema12 = c;})
 			.accessor(d => d.ema12);
 
 		const macdCalculator = macd()
 			.options({
-				fast: 6,
-				slow: 12,
-				signal: 3,
+				fast: 12,
+				slow: 20,
+				signal: 5,
 				sourcePath: 'sentiment_score'
 			})
 			.merge((d, c) => {d.macd = c;})
@@ -98,6 +98,7 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 			displayXAccessor,
 		} = xScaleProvider(calculatedData);
 
+		getStockCalculus(data)
 
 		return (
 			<ChartCanvas height={600}

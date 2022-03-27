@@ -62,10 +62,10 @@ export const CompanyDateForm = ({ setValue }) => {
                                         onChange={e => {
                                         setCompany(e.target.value);
                                         }} >
-                                        <option value={1} >Itaú</option>
-                                        <option value={2} >Petrobras</option>
-                                        <option value={3} >Bradesco</option>
-                                        <option value={4} >B3</option>
+                                        <option value={1} >Itaú (ITUB4)</option>
+                                        <option value={2} >Petrobras (PETR4)</option>
+                                        <option value={3} >Bradesco (BRDC4)</option>
+                                        <option value={4} >B3 (B3SA3)</option>
                                     </Form.Control>
                                 </Col>
                             </Row>

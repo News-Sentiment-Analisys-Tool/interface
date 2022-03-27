@@ -1,0 +1,1 @@
+export const SET_MACD_DATA = 'SET_MACD_DATA';

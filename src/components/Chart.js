@@ -4,6 +4,8 @@ import { getStockData } from '../services/stockApi'
 import { groupReportByDate } from '../utils/groupBy'
 import { TypeChooser } from "react-stockcharts/lib/helper";
 import { AlertDismissible } from './AlertDismissible'
+import { useDispatch } from 'react-redux'
+import { SET_MACD_DATA } from '../actions/actionTypes'
 import { useState, useEffect } from 'react'
 import {
   Spinner,
@@ -17,7 +19,6 @@ const getReportDate = async (params) => {
     const stockArray = await getStockData(params)
     let arr = []  
     for (const item of Object.entries(groupReportByDate([...stockArray, ...sentimentArray], 'date'))) {
-        console.log(item)
       if(item[1].length > 1) {
         arr = [...arr, {
           ...item[1][1],
@@ -34,18 +35,17 @@ const getReportDate = async (params) => {
         }]
       }
     }
-    console.log('sentiment', sentimentArray)
+
     return arr.sort((a,b) => (new Date(a.date).getTime() > new Date(b.date).getTime()? 1:-1))
   }
-  
 
 export function ChartComponent({ params }) {
     const [state, setState] = useState(null)
+    const dispatch = useDispatch()
     
     useEffect(() => {
       setState(null)
       getReportDate(params).then(data => {
-          console.log(data)
         setState(data)
       })
     }, [params])
@@ -74,10 +74,17 @@ export function ChartComponent({ params }) {
         <AlertDismissible />
       )
     }
+
+    const getStockCalculus = (data) => {
+        dispatch({
+            type: SET_MACD_DATA,
+            stockData: data
+        })
+    }
   
     return (
       <TypeChooser>
-        {type => <CandleStickChartWithMACDIndicator type={type} data={state} />}
+        {type => <CandleStickChartWithMACDIndicator type={type} data={state} getStockCalculus={(data) => getStockCalculus(data)} />}
       </TypeChooser>
     )
   }

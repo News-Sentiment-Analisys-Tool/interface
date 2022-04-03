@@ -5,9 +5,9 @@ import { DailyReturn } from '../domain/DailyReturn'
 export const getSentimentInformation = async (params) => {
 
     const baseUrl = axios.create({
-      baseURL: `${process.env.SENTIMENT_SERVICE_URL}`
+      baseURL: `${process.env.REACT_APP_SENTIMENT_SERVICE_URL}`
     })
-  
+
     const response = await baseUrl.get('/report',{
       params
     });

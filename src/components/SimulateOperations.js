@@ -4,10 +4,15 @@ import {
   Table
 } from 'react-bootstrap'
 
+const formatDate = (date) => {
+  const formated = new Date(date.setHours(date.getHours()))
+  return `${(formated.getDate() + 1) > 9 ? formated.getDate() : `0${formated.getDate()}`}-${(formated.getMonth() + 1) > 9 ? formated.getMonth() : `0${formated.getMonth()}`}-${formated.getFullYear()}`
+}
+
 export const SimulateOperations = () => {
     const stockData = useSelector(state => state.stockState.stockData)
-    let initialCash = 0.00
-    let investedCash = 0.00
+    let profit = 0.00
+    let totalProfit = 0.00
     let checkForFirstTrend = false
     let isBullTrend
     let isBearTrend
@@ -19,7 +24,7 @@ export const SimulateOperations = () => {
     
     for (const [i, day] of stockData.entries()) {
       const { macd, signal } = day.macd
-      const { close, date } = day
+      const { open, date } = day
       let hasMacdAndSignal = macd && signal
   
       if (hasMacdAndSignal && !checkForFirstTrend) {
@@ -36,44 +41,42 @@ export const SimulateOperations = () => {
   
       if(checkForFirstTrend) {
         if ((isBearTrend && (macd >= signal))) {
-            let price = (close > 0 ? close : (stockData[i + 1]?.close > 0 ? stockData[i + 1]?.close : stockData[i + 2]?.close)) || 0.00
+            let price = (open > 0 ? open : (stockData[i + 1]?.open > 0 ? stockData[i + 1]?.open : stockData[i + 2]?.open)) || 0.00
             isBearTrend = false
             isBullTrend = true
             if (price > 0) {
                 buyRealized = true
-                investedCash += (price || 0.00)
+                profit = 0.0
                 buyOperationsCount += 1
                 operationData = [
                     ...operationData,
                     {
                     id,
-                    initialCash,
-                    investedCash,
+                    profit,
                     action: 'compra',
-                    close: price,
-                    date: date.toISOString().substring(0, 10),
+                    open: price,
+                    date
                     }
                 ]
             }
         }
-  
+
         if ((isBullTrend && (macd <= signal))) {
-            let price = (close > 0 ? close : (stockData[i + 1]?.close > 0 ? stockData[i + 1]?.close : stockData[i + 2]?.close)) || 0.00
+            let price = (open > 0 ? open : (stockData[i + 1]?.open > 0 ? stockData[i + 1]?.open : stockData[i + 2]?.open)) || 0.00
             isBearTrend = true
             isBullTrend = false
             if (buyRealized && price > 0) {
-                investedCash -= (price || 0.00)
-                investedCash = investedCash * (-1)
+                profit = price - operationData[operationData.length - 1].open
+                totalProfit += profit
                 sellOperationsCount += 1
                 operationData = [
                     ...operationData,
                     {
                     id,
-                    initialCash,
-                    investedCash,
+                    profit,
                     action: 'venda',
-                    close: price,
-                    date: date.toISOString().substring(0, 10),
+                    open: price,
+                    date
                     }
                 ]
             }
@@ -92,9 +95,10 @@ export const SimulateOperations = () => {
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>
-            <th>Ação</th>
-            <th>Preço</th>
-            <th>Investido</th>
+            <th>Código</th>
+            <th>Operação</th>
+            <th>Preço (R$)</th>
+            <th>Lucro Líquido (R$))</th>
             <th>Data</th>
           </tr>
         </thead>
@@ -102,10 +106,13 @@ export const SimulateOperations = () => {
           {
             operationData.map((item) => (
               <tr key={item.id}>
+                <td>{stockData[0].symbol.split('.')[0]}</td>
                 <td>{item.action}</td>
-                <td>{item.close}</td>
-                <td>{item.investedCash}</td>
-                <td>{item.date}</td>
+                <td>{item.open.toPrecision(4)}</td>
+                <td style={{
+                  background: item.profit > 0 ? 'green': (item.profit < 0 ? 'red' : '')
+                }}>{item.profit.toPrecision(2)}</td>
+                <td>{formatDate(item.date)}</td>
               </tr>
             ))
           }
@@ -113,22 +120,22 @@ export const SimulateOperations = () => {
       </Table>
       <br />
       <br />
-      <h3>Balanço consolidado</h3>
-      <Table striped bordered hover variant="dark">
+      <h3 style={{
+        marginTop: '50px'
+      }}>Balanço consolidado</h3>
+      <Table bordered hover variant="dark">
         <thead>
           <tr key={1}>
-            <th>Investimento Inicial</th>
-            <th>Dinheiro investido</th>
-            <th>Resultado</th>
+            <th>Lucro Líquido (R$)</th>
             <th>Operações de compra</th>
             <th>Operações de venda</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{operationData[0]?.close || 0.00}</td>
-            <td>{investedCash}</td>
-            <td>{Math.abs(investedCash) - Math.abs(operationData[0]?.close || 0.00)}</td>
+            <td style={{
+              background: totalProfit > 0 ? 'green': (totalProfit < 0 ? 'red' : '')
+            }}>{totalProfit.toPrecision(2)}</td>
             <td>{buyOperationsCount}</td>
             <td>{sellOperationsCount}</td>
           </tr>

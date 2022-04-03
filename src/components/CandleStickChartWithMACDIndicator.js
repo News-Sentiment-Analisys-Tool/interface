@@ -57,23 +57,27 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 	render() {
 		const { type, data: initialData, width, ratio, getStockCalculus } = this.props;
 
+		const slow = 26
+		const fast = 12
+		const signal = 9
+
 		const ema26 = ema()
 			.id(0)
-			.options({ windowSize: 20, sourcePath: 'sentiment_score' })
+			.options({ windowSize: slow, sourcePath: 'sentiment_score' })
 			.merge((d, c) => { d.ema26 = c; })
 			.accessor(d => d.ema26);
 
 		const ema12 = ema()
 			.id(1)
-			.options({ windowSize: 8, sourcePath: 'sentiment_score' })
+			.options({ windowSize: fast, sourcePath: 'sentiment_score' })
 			.merge((d, c) => {d.ema12 = c;})
 			.accessor(d => d.ema12);
 
 		const macdCalculator = macd()
 			.options({
-				fast: 12,
-				slow: 20,
-				signal: 5,
+				fast,
+				slow,
+				signal,
 				sourcePath: 'sentiment_score'
 			})
 			.merge((d, c) => {d.macd = c;})

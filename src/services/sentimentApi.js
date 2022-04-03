@@ -5,7 +5,7 @@ import { DailyReturn } from '../domain/DailyReturn'
 export const getSentimentInformation = async (params) => {
 
     const baseUrl = axios.create({
-      baseURL: 'https://jriqhhw3ua.execute-api.us-east-1.amazonaws.com/dev'
+      baseURL: `${process.env.SENTIMENT_SERVICE_URL}`
     })
   
     const response = await baseUrl.get('/report',{

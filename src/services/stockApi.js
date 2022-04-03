@@ -9,7 +9,7 @@ export const getStockData = async (params) => {
       4: 'B3SA3'
     }
     
-    const response = await axios.get(`https://luocecslc7.execute-api.us-east-1.amazonaws.com/dev/stock?code=${company[params.companyId]}&start=${params.startDate}&end=${params.endDate}`)
+    const response = await axios.get(`${process.env.STOCK_SERVICE_URL}/stock?code=${company[params.companyId]}&start=${params.startDate}&end=${params.endDate}`)
   
     return response.data.map(item => {
       return {

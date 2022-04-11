@@ -13,7 +13,7 @@ import {
   Navbar,
   Button,
 } from 'react-bootstrap'
-
+import { companies } from './domain/Companies'
 
 
 function App() {
@@ -64,7 +64,7 @@ function App() {
           <br />
           <br />
           <Row className='App'>
-            <h3>{`${params.indicator === 1 ? 'MME':'MACD'} - Sentimento de notícias`}</h3>
+            <h3>{`${params.indicator === 1 ? 'MME':'MACD'} (${companies[params.company]}) - Sentimento de notícias`}</h3>
           </Row>
           <ChartComponent params={{
             companyId: params.company,

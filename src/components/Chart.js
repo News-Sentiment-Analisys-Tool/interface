@@ -4,7 +4,7 @@ import { getStockData } from '../services/stockApi'
 import { groupReportByDate } from '../utils/groupBy'
 import { TypeChooser } from "react-stockcharts/lib/helper";
 import { AlertDismissible } from './AlertDismissible'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SET_MACD_DATA } from '../actions/actionTypes'
 import { useState, useEffect } from 'react'
 import {
@@ -42,6 +42,7 @@ const getReportDate = async (params) => {
 export function ChartComponent({ params }) {
     const [state, setState] = useState(null)
     const dispatch = useDispatch()
+    const simulatorParams = useSelector(state => state.simulatorParamsState.simulatorParams)
     
     useEffect(() => {
       setState(null)
@@ -84,7 +85,7 @@ export function ChartComponent({ params }) {
   
     return (
       <TypeChooser>
-        {type => <CandleStickChartWithMACDIndicator type={type} data={state} getStockCalculus={(data) => getStockCalculus(data)} />}
+        {type => <CandleStickChartWithMACDIndicator params={simulatorParams} type={type} data={state} getStockCalculus={(data) => getStockCalculus(data)} />}
       </TypeChooser>
     )
   }

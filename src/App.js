@@ -10,7 +10,8 @@ import {
   Container,
   Row,
   Nav,
-  Navbar
+  Navbar,
+  Button,
 } from 'react-bootstrap'
 
 
@@ -32,7 +33,7 @@ function App() {
           />
           
         </Navbar.Brand>
-        <Navbar.Brand href="#home">MACD - News</Navbar.Brand>
+        <Navbar.Brand href="#home">Análise Técnica - Notícias - Simulador</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="#home">Home</Nav.Link>
         </Nav>
@@ -41,25 +42,38 @@ function App() {
     <Container>
       <br />
       <Row className='App'>
-        <h1>Simulador</h1>
-        <CompanyDateForm setValue={(data) => setParams(data)} />
+        {!params  ? (
+          <CompanyDateForm setValue={(data) => setParams(data)} />
+        ) : (
+          <Button 
+          style={{
+            width: '50%',
+            marginLeft: '25%'
+          }} 
+          onClick={() => {
+            window.location.reload()
+          }} variant="success">
+          Realizar Nova Simulação
+        </Button>
+        )}
       </Row>
-        {params 
-            && 
-            <>
-              <br />
-              <br />
-              <h3>MACD - Sentimento de notícias</h3>
-              <ChartComponent params={{
-                companyId: params.company,
-                startDate: params.startDate,
-                endDate: params.endDate
-              }}/>
-            </>
-        }
-      <br />
-      <br />
-      <br />
+    </Container>
+    {params 
+        && 
+        <>
+          <br />
+          <br />
+          <Row className='App'>
+            <h3>{`${params.indicator === 1 ? 'MME':'MACD'} - Sentimento de notícias`}</h3>
+          </Row>
+          <ChartComponent params={{
+            companyId: params.company,
+            startDate: params.startDate,
+            endDate: params.endDate
+          }}/>
+        </>
+    }
+    <Container> 
       <Row>
         <SimulateOperations />
       </Row>

@@ -55,11 +55,14 @@ const mouseEdgeAppearance = {
 class CandleStickChartWithMACDIndicator extends React.Component {
 
 	render() {
-		const { type, data: initialData, width, ratio, getStockCalculus } = this.props;
+		const { type, data: initialData, width, ratio, getStockCalculus, params } = this.props;
 
-		const slow = 26
-		const fast = 12
-		const signal = 9
+		const slow = parseInt(params.slow)
+		const fast = parseInt(params.fast)
+		const signal = parseInt(params.signal)
+		const indicator = parseInt(params.indicator)
+		const candle = params.candle
+		const volume = params.volume
 
 		const ema26 = ema()
 			.id(0)
@@ -129,8 +132,11 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 						displayFormat={format(".2f")}
 						{...mouseEdgeAppearance}
 					/>
-
-					<CandlestickSeries />
+					{
+						candle && (
+							<CandlestickSeries />
+						)
+					}
 					<LineSeries yAccessor={ema26.accessor()} stroke={ema26.stroke()}/>
 					<LineSeries yAccessor={ema12.accessor()} stroke={ema12.stroke()}/>
 
@@ -167,52 +173,61 @@ class CandleStickChartWithMACDIndicator extends React.Component {
 						]}
 					/>
 				</Chart>
-				<Chart id={2} height={150}
-					yExtents={[d => d.volume, smaVolume50.accessor()]}
-					origin={(w, h) => [0, h - 300]}
-				>
-					<YAxis axisAt="left" orient="left" ticks={5} tickFormat={format(".2s")}/>
+				{
+					volume && (
+						<Chart id={2} height={150}
+							yExtents={[d => d.volume, smaVolume50.accessor()]}
+							origin={(w, h) => [0, h - 300]}
+						>
+							<YAxis axisAt="left" orient="left" ticks={5} tickFormat={format(".2s")}/>
 
-					<MouseCoordinateY
-						at="left"
-						orient="left"
-						displayFormat={format(".4s")}
-						{...mouseEdgeAppearance}
-					/>
+							<MouseCoordinateY
+								at="left"
+								orient="left"
+								displayFormat={format(".4s")}
+								{...mouseEdgeAppearance}
+							/>
 
-					<BarSeries yAccessor={d => d.volume} fill={d => d.close > d.open ? "#6BA583" : "#FF0000"} />
-					<AreaSeries yAccessor={smaVolume50.accessor()} stroke={smaVolume50.stroke()} fill={smaVolume50.fill()}/>
-				</Chart>
-				<Chart id={3} height={150}
-					yExtents={macdCalculator.accessor()}
-					origin={(w, h) => [0, h - 150]} padding={{ top: 10, bottom: 10 }}
-				>
-					<XAxis axisAt="bottom" orient="bottom"/>
-					<YAxis axisAt="right" orient="right" ticks={2} />
+							<BarSeries yAccessor={d => d.volume} fill={d => d.close > d.open ? "#6BA583" : "#FF0000"} />
+							<AreaSeries yAccessor={smaVolume50.accessor()} stroke={smaVolume50.stroke()} fill={smaVolume50.fill()}/>
+						</Chart>
+					)
+				}
+				
+				{
+					indicator === 2 && (
+						<Chart id={3} height={150}
+							yExtents={macdCalculator.accessor()}
+							origin={(w, h) => [0, h - 150]} padding={{ top: 10, bottom: 10 }}
+						>
+							<XAxis axisAt="bottom" orient="bottom"/>
+							<YAxis axisAt="right" orient="right" ticks={2} />
 
-					<MouseCoordinateX
-						at="bottom"
-						orient="bottom"
-						displayFormat={timeFormat("%Y-%m-%d")}
-						rectRadius={5}
-						{...mouseEdgeAppearance}
-					/>
-					<MouseCoordinateY
-						at="right"
-						orient="right"
-						displayFormat={format(".2f")}
-						{...mouseEdgeAppearance}
-					/>
+							<MouseCoordinateX
+								at="bottom"
+								orient="bottom"
+								displayFormat={timeFormat("%Y-%m-%d")}
+								rectRadius={5}
+								{...mouseEdgeAppearance}
+							/>
+							<MouseCoordinateY
+								at="right"
+								orient="right"
+								displayFormat={format(".2f")}
+								{...mouseEdgeAppearance}
+							/>
 
-					<MACDSeries yAccessor={d => d.macd}
-						{...macdAppearance} />
-					<MACDTooltip
-						origin={[-38, 15]}
-						yAccessor={d => d.macd}
-						options={macdCalculator.options()}
-						appearance={macdAppearance}
-					/>
-				</Chart>
+							<MACDSeries yAccessor={d => d.macd}
+								{...macdAppearance} />
+							<MACDTooltip
+								origin={[-38, 15]}
+								yAccessor={d => d.macd}
+								options={macdCalculator.options()}
+								appearance={macdAppearance}
+							/>
+						</Chart>
+					)
+				}
 				<CrossHairCursor />
 			</ChartCanvas>
 		);

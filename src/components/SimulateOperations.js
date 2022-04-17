@@ -59,6 +59,7 @@ export const SimulateOperations = () => {
       if(checkForFirstTrend) {
         if ((isBearTrend && (macd >= signal))) {
             let price = (open > 0 ? open : (stockData[i + 1]?.open > 0 ? stockData[i + 1]?.open : stockData[i + 2]?.open)) || 0.00
+            let dateOp = (open > 0 ? date : (stockData[i + 1]?.open > 0 ? stockData[i + 1]?.date: stockData[i + 2]?.date)) || date
             isBearTrend = false
             isBullTrend = true
             if (price > 0) {
@@ -74,7 +75,7 @@ export const SimulateOperations = () => {
                     variation,
                     action: 'compra',
                     open: price,
-                    date
+                    date: dateOp
                     }
                 ]
             }
@@ -82,6 +83,7 @@ export const SimulateOperations = () => {
 
         if ((isBullTrend && (macd <= signal))) {
             let price = (open > 0 ? open : (stockData[i + 1]?.open > 0 ? stockData[i + 1]?.open : stockData[i + 2]?.open)) || 0.00
+            let dateOp = (open > 0 ? date : (stockData[i + 1]?.open > 0 ? stockData[i + 1]?.date: stockData[i + 2]?.date)) || date
             isBearTrend = true
             isBullTrend = false
             if (buyRealized && price > 0) {
@@ -99,7 +101,7 @@ export const SimulateOperations = () => {
                     totalVariation,
                     action: 'venda',
                     open: price,
-                    date
+                    date: dateOp
                     }
                 ]
             }

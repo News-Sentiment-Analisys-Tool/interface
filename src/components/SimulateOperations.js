@@ -6,7 +6,7 @@ import {
 
 const formatDate = (date) => {
   const formated = new Date(date.setHours(date.getHours()))
-  return `${(formated.getDate() + 1) > 9 ? formated.getDate() : `0${formated.getDate()}`}-${(formated.getMonth() + 1) > 9 ? formated.getMonth() : `0${formated.getMonth()}`}-${formated.getFullYear()}`
+  return `${(formated.getDate() + 1) > 9 ? formated.getDate() : `0${formated.getDate()}`}-${(formated.getMonth() + 1) > 9 ? formated.getMonth() : `0${formated.getMonth() + 1}`}-${formated.getFullYear()}`
 }
 
 export const SimulateOperations = () => {
